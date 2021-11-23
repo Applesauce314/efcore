@@ -91,6 +91,10 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
                 {
                     dbFunctionBuilder.HasSchema(dbFunctionAttribute.Schema, fromDataAnnotation: true);
                 }
+                if (dbFunctionAttribute.Package != null)
+                {
+                    dbFunctionBuilder.HasPackage(dbFunctionAttribute.Package, fromDataAnnotation: true);
+                }
 
                 if (dbFunctionAttribute.IsBuiltIn)
                 {

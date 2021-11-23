@@ -95,6 +95,7 @@ namespace Microsoft.EntityFrameworkCore.Query
 
                 return _sqlExpressionFactory.Function(
                     dbFunction.Schema,
+                    dbFunction.Package,
                     dbFunction.Name,
                     arguments,
                     nullable: dbFunction.IsNullable,

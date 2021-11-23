@@ -94,6 +94,36 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Builders.Internal
         ///     any release. You should only use it directly in your code with extreme caution and knowing that
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
+        public virtual IConventionDbFunctionBuilder HasPackage([CanBeNull] string package, ConfigurationSource configurationSource)
+        {
+            if (CanSetPackage(package, configurationSource))
+            {
+                Metadata.SetPackage(package, configurationSource);
+                return this;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
+        ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
+        ///     any release. You should only use it directly in your code with extreme caution and knowing that
+        ///     doing so can result in application failures when updating to a new Entity Framework Core release.
+        /// </summary>
+        public virtual bool CanSetPackage([CanBeNull] string package, ConfigurationSource configurationSource)
+            => (package != "" || configurationSource == ConfigurationSource.Explicit)
+                && (configurationSource.Overrides(Metadata.GetPackageConfigurationSource())
+                    || Metadata.Name == package);
+
+        /// <summary>
+        ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
+        ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
+        ///     any release. You should only use it directly in your code with extreme caution and knowing that
+        ///     doing so can result in application failures when updating to a new Entity Framework Core release.
+        /// </summary>
+
+
         public virtual IConventionDbFunctionBuilder IsBuiltIn(bool builtIn, ConfigurationSource configurationSource)
         {
             if (CanSetIsBuiltIn(builtIn, configurationSource))
@@ -274,6 +304,14 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Builders.Internal
         bool IConventionDbFunctionBuilder.CanSetSchema(string schema, bool fromDataAnnotation)
             => CanSetSchema(schema, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
 
+        [DebuggerStepThrough]
+        IConventionDbFunctionBuilder IConventionDbFunctionBuilder.HasPackage(string name, bool fromDataAnnotation)
+    => HasPackage(name, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
+
+        /// <inheritdoc />
+        [DebuggerStepThrough]
+        bool IConventionDbFunctionBuilder.CanSetPackage(string package, bool fromDataAnnotation)
+            => CanSetPackage(package, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
         /// <inheritdoc />
         [DebuggerStepThrough]
         IConventionDbFunctionBuilder IConventionDbFunctionBuilder.IsBuiltIn(bool builtIn, bool fromDataAnnotation)

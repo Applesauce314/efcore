@@ -451,6 +451,28 @@ namespace Microsoft.EntityFrameworkCore.Query
         /// <summary>
         ///     Creates a new <see cref="SqlFunctionExpression" /> which represents a function call in a SQL tree.
         /// </summary>
+        /// <param name="schema"> The schema in which the function is defined. </param>
+        /// <param name="package"> The package in which the function is defined. </param>
+        /// <param name="name"> The name of the function. </param>
+        /// <param name="arguments"> The arguments of the function. </param>
+        /// <param name="nullable"> A bool value indicating whether this function can return null. </param>
+        /// <param name="argumentsPropagateNullability"> A list of bool values indicating whether individual arguments propagate null to result. </param>
+        /// <param name="returnType"> The <see cref="Type" /> of the expression. </param>
+        /// <param name="typeMapping"> The <see cref="RelationalTypeMapping" /> associated with the expression. </param>
+        /// <returns> An expression representing a function call in a SQL tree. </returns>
+        SqlFunctionExpression Function(
+            [NotNull] string schema,
+            [NotNull] string package,
+            [NotNull] string name,
+            [NotNull] IEnumerable<SqlExpression> arguments,
+            bool nullable,
+            [NotNull] IEnumerable<bool> argumentsPropagateNullability,
+            [NotNull] Type returnType,
+            [CanBeNull] RelationalTypeMapping typeMapping = null);
+
+        /// <summary>
+        ///     Creates a new <see cref="SqlFunctionExpression" /> which represents a function call in a SQL tree.
+        /// </summary>
         /// <param name="instance"> An expression on which the function is applied. </param>
         /// <param name="name"> The name of the function. </param>
         /// <param name="arguments"> The arguments of the function. </param>
@@ -495,6 +517,24 @@ namespace Microsoft.EntityFrameworkCore.Query
         /// <returns> An expression representing a function call in a SQL tree. </returns>
         SqlFunctionExpression NiladicFunction(
             [NotNull] string schema,
+            [NotNull] string name,
+            bool nullable,
+            [NotNull] Type returnType,
+            [CanBeNull] RelationalTypeMapping typeMapping = null);
+
+        /// <summary>
+        ///     Creates a new <see cref="SqlFunctionExpression" /> which represents a niladic function call in a SQL tree.
+        /// </summary>
+        /// <param name="schema"> The schema in which the function is defined. </param>
+        /// <param name="package"> The package in which the function is defined. </param>
+        /// <param name="name"> The name of the function. </param>
+        /// <param name="nullable"> A bool value indicating whether this function can return null. </param>
+        /// <param name="returnType"> The <see cref="Type" /> of the expression. </param>
+        /// <param name="typeMapping"> The <see cref="RelationalTypeMapping" /> associated with the expression. </param>
+        /// <returns> An expression representing a function call in a SQL tree. </returns>
+        SqlFunctionExpression NiladicFunction(
+            [NotNull] string schema,
+            [NotNull] string package,
             [NotNull] string name,
             bool nullable,
             [NotNull] Type returnType,

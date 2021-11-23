@@ -38,5 +38,13 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Builders
         /// <returns> The same builder instance so that multiple configuration calls can be chained. </returns>
         public new virtual TableValuedFunctionBuilder HasSchema([CanBeNull] string schema)
             => (TableValuedFunctionBuilder)base.HasSchema(schema);
+
+        /// <summary>
+        ///     Sets the package of the database function.
+        /// </summary>
+        /// <param name="package"> The package of the function in the database. </param>
+        /// <returns> The same builder instance so that multiple configuration calls can be chained. </returns>
+        public new virtual TableValuedFunctionBuilder HasPackage([CanBeNull] string package)
+            => (TableValuedFunctionBuilder)base.HasPackage(package);
     }
 }

@@ -18,7 +18,10 @@ namespace Microsoft.EntityFrameworkCore
 #pragma warning restore CA1813 // Avoid unsealed attributes
     {
         private string _name;
+        [CanBeNull]
         private string _schema;
+        [CanBeNull]
+        private string _package;
         private bool _builtIn;
         private bool? _nullable;
 
@@ -34,12 +37,14 @@ namespace Microsoft.EntityFrameworkCore
         /// </summary>
         /// <param name="name">The name of the function in the database.</param>
         /// <param name="schema">The schema of the function in the database.</param>
-        public DbFunctionAttribute([NotNull] string name, [CanBeNull] string schema = null)
+        /// <param name="package">The package of the function in the database.</param>
+        public DbFunctionAttribute([NotNull] string name, [CanBeNull] string schema = null, [CanBeNull] string package = null)
         {
             Check.NotEmpty(name, nameof(name));
 
             _name = name;
             _schema = schema;
+            _package = package;
         }
 
         /// <summary>
@@ -64,6 +69,15 @@ namespace Microsoft.EntityFrameworkCore
         {
             get => _schema;
             [param: CanBeNull] set => _schema = value;
+        }
+
+        /// <summary>
+        ///     The package of the function in the database.
+        /// </summary>
+        public virtual string Package
+        {
+            get => _package;
+            [param: CanBeNull] set => _package = value;
         }
 
         /// <summary>

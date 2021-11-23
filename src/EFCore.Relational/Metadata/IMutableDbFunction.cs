@@ -26,6 +26,11 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         new string Schema { get; [param: CanBeNull] set; }
 
         /// <summary>
+        ///     Gets or sets the package of the function in the database.
+        /// </summary>
+        new string Package { get; [param: CanBeNull] set; }
+
+        /// <summary>
         ///     Gets or sets the value indicating whether the database function is built-in or not.
         /// </summary>
         new bool IsBuiltIn { get; set; }

@@ -654,6 +654,32 @@ namespace Microsoft.EntityFrameworkCore.Query
 
         /// <inheritdoc />
         public virtual SqlFunctionExpression Function(
+            string schema,
+            string package,
+            string name,
+            IEnumerable<SqlExpression> arguments,
+            bool nullable,
+            IEnumerable<bool> argumentsPropagateNullability,
+            Type returnType,
+            RelationalTypeMapping typeMapping = null)
+        {
+            Check.NotEmpty(name, nameof(name));
+            Check.NotNull(arguments, nameof(arguments));
+            Check.NotNull(argumentsPropagateNullability, nameof(argumentsPropagateNullability));
+            Check.NotNull(returnType, nameof(returnType));
+
+            var typeMappedArguments = new List<SqlExpression>();
+            foreach (var argument in arguments)
+            {
+                typeMappedArguments.Add(ApplyDefaultTypeMapping(argument));
+            }
+
+            return new SqlFunctionExpression(
+                schema, package, name, typeMappedArguments, nullable, argumentsPropagateNullability, returnType, typeMapping);
+        }
+
+        /// <inheritdoc />
+        public virtual SqlFunctionExpression Function(
             SqlExpression instance,
             string name,
             IEnumerable<SqlExpression> arguments,
@@ -707,6 +733,23 @@ namespace Microsoft.EntityFrameworkCore.Query
             Check.NotNull(returnType, nameof(returnType));
 
             return new SqlFunctionExpression(schema, name, nullable, returnType, typeMapping);
+        }
+
+        /// <inheritdoc />
+        public virtual SqlFunctionExpression NiladicFunction(
+            string schema,
+            string package,
+            string name,
+            bool nullable,
+            Type returnType,
+            RelationalTypeMapping typeMapping = null)
+        {
+            Check.NotEmpty(schema, nameof(schema));
+            Check.NotEmpty(package, nameof(package));
+            Check.NotEmpty(name, nameof(name));
+            Check.NotNull(returnType, nameof(returnType));
+
+            return new SqlFunctionExpression(schema,package, name, nullable, returnType, typeMapping);
         }
 
         /// <inheritdoc />

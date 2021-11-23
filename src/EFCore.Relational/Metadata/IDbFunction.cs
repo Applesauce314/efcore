@@ -26,6 +26,11 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         string Schema { get; }
 
         /// <summary>
+        ///     Gets the package of the function in the database.
+        /// </summary>
+        string Package { get; }
+
+        /// <summary>
         ///     Gets the name of the function in the model.
         /// </summary>
         string ModelName { get; }

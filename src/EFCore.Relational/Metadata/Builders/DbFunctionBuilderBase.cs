@@ -76,6 +76,18 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Builders
         }
 
         /// <summary>
+        ///     Sets the package containing the database function
+        /// </summary>
+        /// <param name="package"> The package of the function in the database. </param>
+        /// <returns> The same builder instance so that multiple configuration calls can be chained. </returns>
+        public virtual DbFunctionBuilderBase HasPackage([NotNull] string package)
+        {
+            Builder.HasPackage(package, ConfigurationSource.Explicit);
+
+            return this;
+        }
+
+        /// <summary>
         ///     Marks whether the database function is built-in.
         /// </summary>
         /// <param name="builtIn"> The value indicating whether the database function is built-in. </param>

@@ -282,7 +282,12 @@ namespace Microsoft.EntityFrameworkCore.Query
                         .Append(_sqlGenerationHelper.DelimitIdentifier(sqlFunctionExpression.Schema))
                         .Append(".");
                 }
-
+                if (!string.IsNullOrEmpty(sqlFunctionExpression.Package))
+                {
+                    _relationalCommandBuilder
+                        .Append(_sqlGenerationHelper.DelimitIdentifier(sqlFunctionExpression.Package))
+                        .Append(".");
+                }
                 _relationalCommandBuilder
                     .Append(_sqlGenerationHelper.DelimitIdentifier(sqlFunctionExpression.Name));
             }

@@ -28,6 +28,8 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
     {
         private readonly List<DbFunctionParameter> _parameters;
         private string _schema;
+        private string _package;
+        [CanBeNull]
         private string _name;
         private bool _builtIn;
         private bool _nullable;
@@ -37,6 +39,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
 
         private ConfigurationSource _configurationSource;
         private ConfigurationSource? _schemaConfigurationSource;
+        private ConfigurationSource? _packageConfigurationSource;
         private ConfigurationSource? _nameConfigurationSource;
         private ConfigurationSource? _builtInConfigurationSource;
         private ConfigurationSource? _nullableConfigurationSource;
@@ -328,6 +331,44 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         /// </summary>
         public virtual ConfigurationSource? GetSchemaConfigurationSource()
             => _schemaConfigurationSource;
+
+        /// <summary>
+        ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
+        ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
+        ///     any release. You should only use it directly in your code with extreme caution and knowing that
+        ///     doing so can result in application failures when updating to a new Entity Framework Core release.
+        /// </summary>
+         [CanBeNull]
+        public virtual string Package
+        {
+            get => _package;
+            set => SetPackage(value, ConfigurationSource.Explicit);
+        }
+
+        /// <summary>
+        ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
+        ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
+        ///     any release. You should only use it directly in your code with extreme caution and knowing that
+        ///     doing so can result in application failures when updating to a new Entity Framework Core release.
+        /// </summary>
+        public virtual string SetPackage([CanBeNull] string package, ConfigurationSource configurationSource)
+        {
+            _package = package;
+
+            _packageConfigurationSource = package == null
+                ? (ConfigurationSource?)null
+                : configurationSource.Max(_packageConfigurationSource);
+
+            return package;
+        }
+        /// <summary>
+        ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
+        ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
+        ///     any release. You should only use it directly in your code with extreme caution and knowing that
+        ///     doing so can result in application failures when updating to a new Entity Framework Core release.
+        /// </summary>
+        public virtual ConfigurationSource? GetPackageConfigurationSource()
+            => _packageConfigurationSource;
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -657,6 +698,11 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         [DebuggerStepThrough]
         string IConventionDbFunction.SetSchema(string schema, bool fromDataAnnotation)
             => SetSchema(schema, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
+
+        /// <inheritdoc />
+        [DebuggerStepThrough]
+        string IConventionDbFunction.SetPackage(string schema, bool fromDataAnnotation)
+            => SetPackage(schema, fromDataAnnotation ? ConfigurationSource.DataAnnotation : ConfigurationSource.Convention);
 
         /// <inheritdoc />
         [DebuggerStepThrough]

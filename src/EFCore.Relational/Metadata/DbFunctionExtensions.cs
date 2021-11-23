@@ -48,6 +48,13 @@ namespace Microsoft.EntityFrameworkCore.Metadata
                     .Append(".");
             }
 
+            if (function.Package != null)
+            {
+                builder
+                    .Append(function.Package)
+                    .Append(".");
+            }
+
             builder.Append(function.Name);
 
             if ((options & MetadataDebugStringOptions.SingleLine) == 0)

@@ -61,6 +61,20 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         ConfigurationSource? GetSchemaConfigurationSource();
 
         /// <summary>
+        ///     Sets the package of the function in the database.
+        /// </summary>
+        /// <param name="package"> The package of the function in the database. </param>
+        /// <param name="fromDataAnnotation"> Indicates whether the configuration was specified using a data annotation. </param>
+        /// <returns> The configured value. </returns>
+        string SetPackage([CanBeNull] string package, bool fromDataAnnotation = false);
+
+        /// <summary>
+        ///     Gets the configuration source for <see cref="IDbFunction.Package" />.
+        /// </summary>
+        /// <returns> The configuration source for <see cref="IDbFunction.Package" />. </returns>
+        ConfigurationSource? GetPackageConfigurationSource();
+
+        /// <summary>
         ///     Sets the value indicating whether the database function is built-in or not.
         /// </summary>
         /// <param name="builtIn"> The value indicating whether the database function is built-in or not. </param>

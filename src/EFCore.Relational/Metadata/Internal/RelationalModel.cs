@@ -723,11 +723,21 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
             if (storeFunction == null)
             {
                 var parameterTypes = dbFunction.Parameters.Select(p => p.StoreType).ToArray();
-                storeFunction = (StoreFunction)model.FindFunction(dbFunction.Name, dbFunction.Schema, parameterTypes);
+                string name;
+                if (dbFunction.Package != null)
+                {
+                    name = $"{dbFunction.Package}.{dbFunction.Name}";
+                }
+                else
+                {
+                    name = dbFunction.Name;
+                }
+                
+                storeFunction = (StoreFunction)model.FindFunction(name, dbFunction.Schema, parameterTypes);
                 if (storeFunction == null)
                 {
                     storeFunction = new StoreFunction(dbFunction, model);
-                    model.Functions.Add((storeFunction.Name, storeFunction.Schema, parameterTypes), storeFunction);
+                    model.Functions.Add((name, storeFunction.Schema, parameterTypes), storeFunction);
                 }
                 else
                 {

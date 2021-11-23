@@ -57,6 +57,27 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Builders
         /// <returns> <see langword="true" /> if the given schema can be set for the database function. </returns>
         bool CanSetSchema([CanBeNull] string schema, bool fromDataAnnotation = false);
 
+
+        /// <summary>
+        ///     Sets the schema of the database function.
+        /// </summary>
+        /// <param name="package"> The package of the function in the database. </param>
+        /// <param name="fromDataAnnotation"> Indicates whether the configuration was specified using a data annotation. </param>
+        /// <returns>
+        ///     The same builder instance if the configuration was applied,
+        ///     <see langword="null" /> otherwise.
+        /// </returns>
+        IConventionDbFunctionBuilder HasPackage([CanBeNull] string package, bool fromDataAnnotation = false);
+
+        /// <summary>
+        ///     Returns a value indicating whether the given package can be set for the database function.
+        /// </summary>
+        /// <param name="package"> The package of the function in the database. </param>
+        /// <param name="fromDataAnnotation"> Indicates whether the configuration was specified using a data annotation. </param>
+        /// <returns> <see langword="true" /> if the given package can be set for the database function. </returns>
+        bool CanSetPackage([CanBeNull] string package, bool fromDataAnnotation = false);
+
+
         /// <summary>
         ///     Sets the value indicating whether the database function is built-in or not.
         /// </summary>
