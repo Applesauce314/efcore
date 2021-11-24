@@ -222,9 +222,12 @@ namespace Microsoft.EntityFrameworkCore.Metadata
         private static readonly MethodInfo MethodImi = typeof(TestMethods).GetRuntimeMethod(
             nameof(TestMethods.MethodI), new Type[] { });
 
+        private static readonly MethodInfo MethodPackagemi = typeof(TestMethods).GetRuntimeMethod(
+            nameof(TestMethods.MethodwithPackage), new[] { typeof(string), typeof(int) });
         private static readonly MethodInfo MethodHmi = typeof(TestMethods).GetTypeInfo().GetDeclaredMethod(nameof(TestMethods.MethodH));
 
         private static readonly MethodInfo MethodJmi = typeof(TestMethods).GetTypeInfo().GetDeclaredMethod(nameof(TestMethods.MethodJ));
+
 
         private class TestMethods
         {
@@ -264,6 +267,12 @@ namespace Microsoft.EntityFrameworkCore.Metadata
             public static int MethodI()
             {
                 throw new Exception();
+            }
+
+            [DbFunction("MethodPkg", "fooschema","barpkg")]
+            public static int MethodwithPackage(string c, int d)
+            {
+                throw new NotImplementedException();
             }
 
             public static IQueryable<TestMethods> MethodJ()
@@ -459,6 +468,46 @@ namespace Microsoft.EntityFrameworkCore.Metadata
 
             Assert.Equal("foo", dbFunc.Name);
             Assert.Equal("bar", dbFunc.Schema);
+            Assert.Null(dbFunc.Package);
+            Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
+        }
+
+        [ConditionalFact]
+        public void Adding_package_method_fluent_only_with_name_schema_package()
+        {
+            var modelBuilder = GetModelBuilder();
+
+            var dbFuncBuilder = modelBuilder.HasDbFunction(MethodAmi)
+                .HasName("foo")
+                .HasSchema("bar")
+                .HasPackage("foopkg");
+
+            var dbFunc = dbFuncBuilder.Metadata;
+
+            modelBuilder.FinalizeModel();
+
+            Assert.Equal("foo", dbFunc.Name);
+            Assert.Equal("bar", dbFunc.Schema);
+            Assert.Equal("foopkg", dbFunc.Package);
+            Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
+        }
+
+        [ConditionalFact]
+        public void Adding_package_method_fluent_only_without_schema()
+        {
+            var modelBuilder = GetModelBuilder();
+
+            var dbFuncBuilder = modelBuilder.HasDbFunction(MethodAmi)
+                .HasName("foo")
+                .HasPackage("foopkg");
+
+            var dbFunc = dbFuncBuilder.Metadata;
+
+            modelBuilder.FinalizeModel();
+
+            Assert.Equal("foo", dbFunc.Name);
+            Assert.Null(dbFunc.Schema);
+            Assert.Equal("foopkg", dbFunc.Package);
             Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
         }
 
@@ -475,6 +524,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata
 
             Assert.Equal("foo", dbFunc.Name);
             Assert.Equal("bar", dbFunc.Schema);
+            Assert.Null(dbFunc.Package);
             Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
         }
 
@@ -490,6 +540,22 @@ namespace Microsoft.EntityFrameworkCore.Metadata
 
             Assert.Equal("MethodFoo", dbFunc.Name);
             Assert.Equal("bar", dbFunc.Schema);
+            Assert.Null(dbFunc.Package);
+            Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
+        }
+
+        [ConditionalFact]
+        public void Adding_package_method_with_attribute_only()
+        {
+            var modelBuilder = GetModelBuilder();
+
+            var dbFuncBuilder = modelBuilder.HasDbFunction(MethodPackagemi);
+            var dbFunc = dbFuncBuilder.Metadata;
+
+            modelBuilder.FinalizeModel();
+            Assert.Equal("MethodPkg", dbFunc.Name);
+            Assert.Equal("fooschema", dbFunc.Schema);
+            Assert.Equal("barpkg", dbFunc.Package);
             Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
         }
 
@@ -508,6 +574,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata
 
             Assert.Equal("foo", dbFunc.Name);
             Assert.Equal("bar", dbFunc.Schema);
+            Assert.Null(dbFunc.Package);
             Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
         }
 
@@ -524,6 +591,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata
 
             Assert.Equal("foo", dbFunc.Name);
             Assert.Equal("bar", dbFunc.Schema);
+            Assert.Null(dbFunc.Package);
             Assert.Equal(typeof(int), dbFunc.MethodInfo.ReturnType);
         }
 
@@ -579,6 +647,21 @@ namespace Microsoft.EntityFrameworkCore.Metadata
             modelBuilder.FinalizeModel();
 
             Assert.Equal("bar", dbFuncBuilder.Metadata.Schema);
+        }
+
+        [ConditionalFact]
+        public void Adding_method_with_relational_schema_attribute_overrides_with_package()
+        {
+            var modelBuilder = GetModelBuilder();
+
+            modelBuilder.HasDefaultSchema("dbo");
+
+            var dbFuncBuilder = modelBuilder.HasDbFunction(MethodPackagemi);
+
+            modelBuilder.FinalizeModel();
+
+            Assert.Equal("fooschema", dbFuncBuilder.Metadata.Schema);
+            Assert.Equal("barpkg", dbFuncBuilder.Metadata.Package);
         }
 
         [ConditionalFact]
