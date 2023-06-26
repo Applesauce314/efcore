@@ -33,8 +33,8 @@ public static class DbFunctionsExtensions
     /// <returns><see langword="true" /> if there is a match.</returns>
     public static bool Like(
         this DbFunctions _,
-        string matchExpression,
-        string pattern)
+        string? matchExpression,
+        string? pattern)
         => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(Like)));
 
     /// <summary>
@@ -61,8 +61,8 @@ public static class DbFunctionsExtensions
     /// <returns><see langword="true" /> if there is a match.</returns>
     public static bool Like(
         this DbFunctions _,
-        string matchExpression,
-        string pattern,
+        string? matchExpression,
+        string? pattern,
         string escapeCharacter)
         => throw new InvalidOperationException(CoreStrings.FunctionOnClient(nameof(Like)));
 
